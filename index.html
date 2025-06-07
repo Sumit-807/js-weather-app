@@ -6,7 +6,7 @@
   <title>JS Weather App</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script>
-    const API_KEY = 'b720d0a0b64e304291a2d736f66fcdb0';
+    const API_KEY = 'YOUR_OPENWEATHERMAP_API_KEY';
     const DEFAULT_CITY = 'Tehran';
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -82,6 +82,26 @@
       }
     });
   </script>
+
+  <style>
+    body {
+        background-image: url(./Tehran.jpeg);
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        padding: 24px;
+    }
+
+    bg-white {
+        background-color: #ffffff69 !important;
+    }
+
+    .text-center {
+        min-height: 100vh;
+        padding: 20vh;
+    }
+  </style>
 </head>
 <body id="app" class="min-h-screen p-6 flex flex-col items-center justify-center transition-colors duration-500">
   <div class="text-center">
