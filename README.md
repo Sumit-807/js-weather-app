@@ -18,7 +18,7 @@
 
 1. Clone this repository.
 2. Replace `YOUR_OPENWEATHERMAP_API_KEY` in the HTML file with your actual API key from [OpenWeatherMap](https://openweathermap.org/).
-3. Open `index.html` in your browser.
+3. Open `script.js` in your browser.
 
 ## Technologies Used
 
