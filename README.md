@@ -4,7 +4,7 @@
 
 ## Features
 
-- Default location set to **Karbala**
+- Default location set to **Tehran**
 - Automatically detects and uses the user's location (with permission)
 - Dynamic **day/night theme** based on sunrise and sunset times
 - Clean, responsive design using **Tailwind CSS**
