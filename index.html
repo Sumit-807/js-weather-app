@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JS Weather App</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script>
+    const API_KEY = 'b720d0a0b64e304291a2d736f66fcdb0';
+    const DEFAULT_CITY = 'Baghdad';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const locationEl = document.getElementById('location');
+      const tempEl = document.getElementById('temperature');
+      const descEl = document.getElementById('description');
+      const forecastEl = document.getElementById('forecast');
+      const appEl = document.getElementById('app');
+
+      function setTheme(sunrise, sunset) {
+        const now = new Date().getTime() / 1000;
+        appEl.className = now >= sunrise && now <= sunset ? 'bg-blue-100 text-gray-800' : 'bg-gray-800 text-white';
+      }
+
+      function displayWeather(data) {
+        locationEl.textContent = `${data.name}, ${data.sys.country}`;
+        tempEl.textContent = `${Math.round(data.main.temp)}°C`;
+        descEl.textContent = data.weather[0].description;
+        setTheme(data.sys.sunrise, data.sys.sunset);
+      }
+
+      function displayForecast(data) {
+        forecastEl.innerHTML = '';
+        const daily = {};
+        data.list.forEach(item => {
+          const date = item.dt_txt.split(' ')[0];
+          if (!daily[date]) {
+            daily[date] = item;
+          }
+        });
+
+        Object.values(daily).slice(0, 5).forEach(item => {
+          const el = document.createElement('div');
+          el.className = 'p-2 bg-white bg-opacity-20 rounded-lg';
+          el.innerHTML = `
+            <p>${new Date(item.dt_txt).toDateString()}</p>
+            <p>${Math.round(item.main.temp)}°C</p>
+            <p>${item.weather[0].main}</p>
+          `;
+          forecastEl.appendChild(el);
+        });
+      }
+
+      function fetchWeatherByCoords(lat, lon) {
+        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`)
+          .then(res => res.json())
+          .then(displayWeather);
+
+        fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`)
+          .then(res => res.json())
+          .then(displayForecast);
+      }
+
+      function fetchWeather(city) {
+        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`)
+          .then(res => res.json())
+          .then(displayWeather);
+
+        fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`)
+          .then(res => res.json())
+          .then(displayForecast);
+      }
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            fetchWeatherByCoords(position.coords.latitude, position.coords.longitude);
+          },
+          () => fetchWeather(DEFAULT_CITY)
+        );
+      } else {
+        fetchWeather(DEFAULT_CITY);
+      }
+    });
+  </script>
+</head>
+<body id="app" class="min-h-screen p-6 flex flex-col items-center justify-center transition-colors duration-500">
+  <div class="text-center">
+    <h1 id="location" class="text-3xl font-bold mb-2">Loading...</h1>
+    <h2 id="temperature" class="text-2xl mb-1"></h2>
+    <p id="description" class="text-lg mb-4 capitalize"></p>
+    <div id="forecast" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6"></div>
+  </div>
+</body>
+</html>
